@@ -1,0 +1,41 @@
+#mapid {
+  position: fixed;
+  height: 94.2%;
+  width: 100%;
+  margin-left: -0.85%;
+}
+
+.col-sm-2 {
+  position: fixed;
+  height: 92.7vh;
+  width: 100%;
+  border-left: rgba(24, 26, 27, 0.7) 5px solid;
+  border-top: rgba(24, 26, 27, 0.7) 5px solid;
+}
+
+p {
+    line-height: 30%;
+}
+
+table {
+	background-color: white;
+  border: rgb(190, 190, 190) 3px solid;
+  width: 92%;
+  font-size: 14px;
+}
+
+table tr th {
+  border: rgb(190, 190, 190) 2px solid;
+  text-align: center;
+}
+
+td {
+  padding-left: 10px;
+  border: rgb(190, 190, 190) 1px solid;
+}
+
+#watch {
+  position: absolute;
+  right: 40px;
+  text-align: right;
+}

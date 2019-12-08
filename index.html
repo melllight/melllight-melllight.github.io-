@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta charset="utf-8">
+    <title>InterfaceGIS</title>
+
+    <!-- Leaflet's CSS -->
+    <link rel = "stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+     integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+     crossorigin=""/>
+
+    <!-- Leaflet's JS -->
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+     integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+     crossorigin=""></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script src="geoJSON/Areas2nd/SovietArea.js"></script>
+    <script src="geoJSON/Areas2nd/DemskiyArea.js"></script>
+    <script src="geoJSON/Areas2nd/KalininskiyArea.js"></script>
+    <script src="geoJSON/Areas2nd/KirovskiyArea.js"></script>
+    <script src="geoJSON/Areas2nd/LeninArea.js"></script>
+    <script src="geoJSON/Areas2nd/OctoberArea.js"></script>
+    <script src="geoJSON/Areas2nd/OrdzhoArea.js"></script>
+
+    <script src="geoJSON/Sensors/Sensors.js"></script>
+
+  </head>
+
+  <body>
+
+  <!-- Навигационная панель -->
+  <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+    <ul class="navbar-nav">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">InterfaceGIS</a>
+      </div>
+      <li class="nav-item active">
+        <a class="nav-link" href="http://www.meteorb.ru/monitoring/air-pollution-ufa">MeteoRB</a>
+      </li>
+    </ul>
+  </nav>
+    
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-10">
+        <div id='mapid'></div>
+      </div>
+
+      <!-- style="background: #5fffe2" -->
+      <div class="col-sm-2" style="background-image: url(images/gray-green-scratch-lines.png)">
+          <!-- Переключатели -->
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="Check0" value="0" checked onclick = "hideLayer(Check0.checked, 0)">
+            <label class="custom-control-label" for="Check0"><b>Советский район</b></label>
+          </div>
+
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="Check1" value="1" checked onclick = "hideLayer(Check1.checked, 1)">
+            <label class="custom-control-label" for="Check1"><b>Демский район</b></label>
+          </div>
+
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="Check2" value="2" checked onclick = "hideLayer(Check2.checked, 2)">
+            <label class="custom-control-label" for="Check2"><b>Калинский район</b></label>
+          </div>
+
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="Check3" value="3" checked onclick = "hideLayer(Check3.checked, 3)">
+            <label class="custom-control-label" for="Check3"><b>Кировский район</b></label>
+          </div>
+
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="Check4" value="4" checked onclick = "hideLayer(Check4.checked, 4)">
+            <label class="custom-control-label" for="Check4"><b>Ленинский район</b></label>
+          </div>
+
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="Check5" value="5" checked onclick = "hideLayer(Check5.checked, 5)">
+            <label class="custom-control-label" for="Check5"><b>Октябрьский район</b></label>
+          </div>
+
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="Check6" value="6" checked onclick = "hideLayer(Check6.checked, 6)">
+            <label class="custom-control-label" for="Check6"><b>Орджоникидзевский район</b></label>
+          </div>
+
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="Check7" value="7" checked onclick = "hideLayer(Check7.checked, 7)">
+            <label class="custom-control-label" for="Check7"><b>Датчики загрязнения воздуха</b></label>
+          </div>
+
+          
+
+          <p></p>
+          <!-- Button to Open the Modal -->
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+            Информация о веществах
+          </button>
+
+          <!-- The Modal -->
+          <div class="modal" id="myModal">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+              
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Виды загрязнения воздуха</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                
+                <!-- Modal body -->
+                <div class="modal-body">
+                  <h5>Домашние хозяйства</h5>
+                  Основное загрязнение воздуха, создаваемое домохозяйствами, образуется вследствие сжигания ископаемых видов топлива, древесины и других видов биомассы внутри помещений для приготовления пищи, отопления и освещения. Ежегодно, загрязнение воздуха внутри помещений становиться причиной около 3,8 миллиона преждевременных смертей, значительное большинство из которых приходиться на развивающиеся страны.
+                  <p></p>
+                  <h5>Промышленность</h5>
+                  Во многих странах одним из главных источников загрязнения является выработка энергии. Угольные электростанции являются крупным источником загрязнения, все большую обеспокоенность вызывает использование дизельных генераторов в районах без подключения к электросети. Промышленные процессы и использование растворителей в химической и горнодобывающей отраслях промышленности также создает загрязнение воздуха.
+                  <p></p>
+                  <h5>Транспорт</h5>
+                  Глобальный транспортный сектор создает почти четверть выбросов углекислого газа, связанных с энергетикой, и этот уровень продолжает расти. Эти транспортные выбросы связывают с почти 400 000 преждевременных смертей. Почти две трети из этих смертей вызваны загрязнением воздуха выбросами от дизельных двигателей, в то время, как люди проживающие вблизи крупных транспортных магистралей имеют до 12% большую вероятность развития деменции.
+                  <p></p>
+                  <h5>Сельское хозяйство</h5>
+                  В сельском хозяйстве есть два основных источника загрязнения воздуха: животноводство, создающее выбросы метана и аммиака, а также сжигание сельскохозяйственных отходов. Выбросы метана способствуют образованию приповерхностного озона, который вызывает астму и другие респираторные заболевания. Кроме того, метан значительно более мощный парниковый газ, чем углекислый газ, – за столетний период выбросы метана окажут в 34 раза большее воздействие. Около 24% всех парниковых газов мира образуются сельским хозяйством, лесоводством и другими видами землепользования.
+                  <p></p>
+                  <h5>Отходы</h5>
+                  Открытое сжигание отходов и органические отходы на свалках выделяют в атмосферу вредные диоксины, фураны, метан и черный углерод. Во всем мире примерно 40% отходов сжигается на открытом воздухе. Наиболее остро эта проблема стоит в урбанизированных регионах и развивающихся странах. Открытое сжигание сельскохозяйственных и/или муниципальных отходов практикуется в 166 из 193 стран мира.
+                  <p></p>
+                  <h5>Другие источники</h5>
+                  Не всё загрязнение образуется вследствие деятельности человека. Извержения вулканов, пылевые бури и прочие природные процессы также могут приводить к проблемам. Особое беспокойство вызывают пылевые и песчаные бури. Переносимые пылевыми бурями взвешенные частицы и пыль могут преодолевать тысячи миль, перенося в своем составе различные патогены и вредоносные вещества, что может приводить к острым и хроническим формам респираторных заболеваний.
+                  <p></p>
+                </div>
+                
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+          <p></p>
+          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            Измеряемые вредные вещества
+          </button>
+          <div class="collapse" id="collapseExample">
+            <div class="well">
+            	<p></p>
+            	<table>
+				  <tr>
+				   <th>Название</th>
+				   <th>Формула</th>
+				   <th>ПДК, <br>мг/м<sub>3</sub></th>
+				  </tr>
+				  <tr>
+				    <td>Пыль (PM2.5)</td>
+					<td>-</td>
+					<td>0,15</td>
+				  </tr>
+				  <tr>
+				    <td>Диоксид серы</td>
+					<td>SO<sub>2</sub></td>
+					<td>0,04</td>
+				  </tr>
+				  <tr>
+				    <td>Оксид углерода</td>
+					<td>CO</td>
+					<td>3</td>
+				  </tr>
+				  <tr>
+				    <td>Диоксид азота</td>
+					<td>NO<sub>2</sub></td>
+					<td>0,05</td>
+				  </tr>
+				  <tr>
+				    <td>Сероводород</td>
+					<td>H<sub>2</sub>S</td>
+					<td>-</td>
+				  </tr>
+				  <tr>
+				    <td>Аммиак</td>
+					<td>NH<sub>3</sub></td>
+					<td>0,04</td>
+				  </tr>
+				  <tr>
+				    <td>Бензол</td>
+					<td>C<sub>6</sub>H<sub>6</sub></td>
+					<td>0,1</td>
+				  </tr>
+				  <tr>
+				    <td>Ксилол</td>
+					<td>C<sub>8</sub>H<sub>12</sub></td>
+					<td>10</td>
+				  </tr>
+				  <tr>
+				    <td>Толуол</td>
+					<td>C<sub>7</sub>H<sub>8</sub></td>
+					<td>10</td>
+				  </tr>
+				  <tr>
+				    <td>Этилбензол</td>
+					<td>C<sub>8</sub>H<sub>10</sub></td>
+					<td>0,02</td>
+				  </tr>
+				  <tr>
+				    <td>Четырех-<br>хлористый <br>углерод</td>
+					<td>CCl<sub>4</sub></td>
+					<td>0,06</td>
+				  </tr>
+				  <tr>
+				    <td>Хлороформ</td>
+					<td>CHCl<sub>3</sub></td>
+					<td>0,05</td>
+				  </tr>
+				  <tr>
+				    <td>Бенз(а)пирен</td>
+					<td>С<sub>20</sub>Н<sub>12</sub></td>
+					<td>-</td>
+				  </tr>
+				  <tr>
+				    <td>Формальдегид</td>
+					<td>СН<sub>2</sub>О</td>
+					<td>0,01</td>
+				  </tr>
+				</table>
+
+            </div>
+          </div> 
+      </div>
+    </div>
+  </div>
+        
+  <script src="main.js"></script>
+  <script src="buttons.js"></script>
+  </body>
+</html> 
